@@ -37,9 +37,12 @@ FEATURES = ["total_spent", "avg_spent", "transaction_count", "recency"]
 # ===============================
 # Replace with your own email and Gmail App Password.
 # Do NOT use your normal Gmail password.
+# Example:
+# EMAIL_SENDER = "your_email@gmail.com"
+# EMAIL_APP_PASSWORD = "your_16_character_app_password"
 
 EMAIL_SENDER = "naveinrajanderan@gmail.com"
-EMAIL_APP_PASSWORD = "jxzgkyaccqtgnldi"
+EMAIL_APP_PASSWORD = "vneaqmrdocfmiczn"
 
 
 # ===============================
@@ -618,7 +621,29 @@ else:
         st.title("Six Analytical Techniques Implemented")
 
         st.dataframe(analytics_summary, use_container_width=True)
+
         st.metric("K-Means Silhouette Score", round(silhouette, 4))
+
+        st.info("""
+The system implements six analytical techniques:
+
+1. K-Means Clustering
+2. Correlation Analysis
+3. Feature Importance Analysis
+4. Logistic Regression
+5. Decision Tree
+6. Random Forest
+
+K-Means is used for customer segmentation.
+
+Correlation Analysis identifies relationships between spending, frequency, average spending, and recency.
+
+Feature Importance identifies the most influential customer behaviour variables.
+
+Logistic Regression, Decision Tree, and Random Forest are used for customer classification and prediction.
+
+Only the three classification models are shown in the Model Comparison page because they produce accuracy scores and confusion matrices.
+""")
 
     elif section == "Dashboard Overview":
         st.title("Customer Financial Behaviour Analytics System")
@@ -795,3 +820,29 @@ else:
 
             st.subheader("Input Summary")
             st.dataframe(input_data, use_container_width=True)
+
+            report_df = pd.DataFrame({
+                "Metric": [
+                    "Customer Score",
+                    "Score Level",
+                    "Prediction",
+                    "High Value Probability",
+                    "Business Recommendation"
+                ],
+                "Value": [
+                    score,
+                    score_level(score),
+                    "High Value Customer" if prediction == 1 else "Low Value Customer",
+                    round(probability[1], 3),
+                    recommendation(score, prediction)
+                ]
+            })
+
+            csv = report_df.to_csv(index=False).encode("utf-8")
+
+            st.download_button(
+                label="Download Prediction Report",
+                data=csv,
+                file_name="customer_prediction_report.csv",
+                mime="text/csv"
+            )
