@@ -1,0 +1,10 @@
+transactions_data.csv
+users.db
+
+.ipynb_checkpoints/
+
+clean-fix/
+customer-financial-behaviour-analytics/
+
+__pycache__/
+*.pyc
