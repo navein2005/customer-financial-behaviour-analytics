@@ -200,62 +200,34 @@ div[data-testid="stFileUploader"] section {{
     border-radius: 18px !important;
 }}
 
+
+/* ==========================
+   SCROLLABLE TABS
+========================== */
+
+div[data-testid="stTabs"] div[role="tablist"] {{
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    white-space: nowrap !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+    scrollbar-width: thin !important;
+}}
+
+div[data-testid="stTabs"] div[role="tablist"]::-webkit-scrollbar {{
+    height: 8px;
+}}
+
+div[data-testid="stTabs"] div[role="tablist"]::-webkit-scrollbar-thumb {{
+    background: {primary};
+    border-radius: 999px;
+}}
+
 div[data-testid="stTabs"] button {{
-    background: transparent !important;
-    color: {muted} !important;
-    border: 1px solid transparent !important;
-    border-radius: 999px !important;
-    box-shadow: none !important;
-    font-weight: 700 !important;
-    padding: 0.45rem 1rem !important;
+    flex: 0 0 auto !important;
 }}
-
-div[data-testid="stTabs"] button:hover {{
-    background: {card} !important;
-    color: {text} !important;
-}}
-
-div[data-testid="stTabs"] button[aria-selected="true"] {{
-    background: linear-gradient(135deg, {primary}, {primary_hover}) !important;
-    color: #FFFFFF !important;
-    border: none !important;
-    box-shadow: 0px 8px 22px rgba(79,70,229,0.25) !important;
-}}
-
-.stAlert {{
-    background: {card} !important;
-    color: {text} !important;
-    border-radius: 18px !important;
-    border: 1px solid {border} !important;
-}}
-
-.stAlert * {{
-    color: {text} !important;
-}}
-
-div[data-testid="stDataFrame"] {{
-    border-radius: 18px !important;
-    background: {card} !important;
-    border: 1px solid {border} !important;
-    overflow: hidden;
-}}
-
-hr {{
-    border-color: {border} !important;
-}}
-
-[data-testid="stRadio"] label {{
-    background: {card} !important;
-    border: 1px solid {border} !important;
-    border-radius: 999px !important;
-    padding: 0.35rem 0.75rem !important;
-    margin: 0.15rem !important;
-}}
-
-[data-testid="stCaptionContainer"] {{
-    color: {muted} !important;
-}}
-
 </style>
 """, unsafe_allow_html=True)
 
