@@ -31,8 +31,8 @@ DB_PATH = "users.db"
 
 FEATURES = ["total_spent", "avg_spent", "transaction_count", "recency"]
 
-EMAIL_SENDER = "YOUR_EMAIL@gmail.com"
-EMAIL_APP_PASSWORD = "YOUR_16_CHARACTER_GMAIL_APP_PASSWORD"
+EMAIL_SENDER = "naveinrajanderan@gmail.com"
+EMAIL_APP_PASSWORD = "vneaqmrdocfmiczn"
 
 
 def hash_password(password):
