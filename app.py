@@ -21,10 +21,247 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix
 
 
+# ===============================
+# PAGE CONFIG
+# ===============================
+
 st.set_page_config(
     page_title="Customer Financial Behaviour Analytics System",
     layout="wide"
 )
+
+# ===============================
+# THEME SETTINGS
+# ===============================
+
+if "theme_mode" not in st.session_state:
+    st.session_state.theme_mode = "Dark"
+
+theme_toggle = st.sidebar.toggle("Light Mode")
+st.session_state.theme_mode = "Light" if theme_toggle else "Dark"
+
+if st.session_state.theme_mode == "Dark":
+    bg = "#0B1020"
+    card = "#111827"
+    text = "#F9FAFB"
+    muted = "#CBD5E1"
+    border = "#243047"
+    primary = "#7C3AED"
+    primary_hover = "#6D28D9"
+    success = "#22C55E"
+    input_bg = "#0F172A"
+    sidebar_bg = "#0F172A"
+else:
+    bg = "#F6F8FC"
+    card = "#FFFFFF"
+    text = "#111827"
+    muted = "#475569"
+    border = "#E5E7EB"
+    primary = "#4F46E5"
+    primary_hover = "#4338CA"
+    success = "#16A34A"
+    input_bg = "#FFFFFF"
+    sidebar_bg = "#FFFFFF"
+
+st.markdown(f"""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+html, body, [class*="css"] {{
+    font-family: 'Inter', 'Segoe UI', sans-serif !important;
+}}
+
+.stApp {{
+    background: {bg};
+    color: {text};
+}}
+
+h1, h2, h3, h4, h5, h6 {{
+    color: {text} !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.03em;
+}}
+
+p, span, label, div {{
+    color: {text} !important;
+}}
+
+section[data-testid="stSidebar"] {{
+    background: {sidebar_bg} !important;
+    border-right: 1px solid {border};
+}}
+
+section[data-testid="stSidebar"] * {{
+    color: {text} !important;
+}}
+
+.stMetric {{
+    background: {card};
+    border-radius: 22px;
+    padding: 20px;
+    border: 1px solid {border};
+    box-shadow: 0px 12px 30px rgba(0,0,0,0.10);
+}}
+
+div[data-testid="metric-container"] {{
+    background: {card};
+    border: 1px solid {border};
+    border-radius: 22px;
+    padding: 18px;
+    box-shadow: 0px 12px 30px rgba(0,0,0,0.08);
+}}
+
+div[data-testid="stMetricValue"] {{
+    font-weight: 800 !important;
+    color: {text} !important;
+}}
+
+div[data-testid="stMetricLabel"] {{
+    color: {muted} !important;
+    font-weight: 600 !important;
+}}
+
+div.stButton > button,
+button[kind="primary"],
+button[kind="secondary"] {{
+    background: linear-gradient(135deg, {primary}, {primary_hover}) !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    border-radius: 999px !important;
+    padding: 0.65rem 1.35rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.01em;
+    box-shadow: 0px 10px 24px rgba(79,70,229,0.25) !important;
+    transition: all 0.20s ease-in-out !important;
+}}
+
+div.stButton > button:hover,
+button[kind="primary"]:hover,
+button[kind="secondary"]:hover {{
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, {primary_hover}, {primary}) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0px 14px 32px rgba(79,70,229,0.35) !important;
+}}
+
+div.stButton > button:focus,
+button[kind="primary"]:focus,
+button[kind="secondary"]:focus {{
+    color: #FFFFFF !important;
+    border: none !important;
+    outline: none !important;
+}}
+
+div[data-testid="stDownloadButton"] button {{
+    background: linear-gradient(135deg, {success}, #15803D) !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    border-radius: 999px !important;
+    font-weight: 700 !important;
+    box-shadow: 0px 10px 24px rgba(22,163,74,0.25) !important;
+}}
+
+div[data-testid="stDownloadButton"] button:hover {{
+    background: linear-gradient(135deg, #22C55E, #15803D) !important;
+    color: #FFFFFF !important;
+    transform: translateY(-2px);
+}}
+
+input, textarea {{
+    background: {input_bg} !important;
+    color: {text} !important;
+    border: 1px solid {border} !important;
+    border-radius: 14px !important;
+}}
+
+input::placeholder, textarea::placeholder {{
+    color: {muted} !important;
+}}
+
+div[data-baseweb="select"] > div {{
+    background: {input_bg} !important;
+    color: {text} !important;
+    border: 1px solid {border} !important;
+    border-radius: 14px !important;
+}}
+
+div[data-baseweb="select"] span {{
+    color: {text} !important;
+}}
+
+div[role="listbox"] {{
+    background: {card} !important;
+    color: {text} !important;
+}}
+
+div[data-testid="stFileUploader"] section {{
+    background: {card} !important;
+    border: 1px dashed {primary} !important;
+    border-radius: 18px !important;
+}}
+
+div[data-testid="stTabs"] button {{
+    background: transparent !important;
+    color: {muted} !important;
+    border: 1px solid transparent !important;
+    border-radius: 999px !important;
+    box-shadow: none !important;
+    font-weight: 700 !important;
+    padding: 0.45rem 1rem !important;
+}}
+
+div[data-testid="stTabs"] button:hover {{
+    background: {card} !important;
+    color: {text} !important;
+}}
+
+div[data-testid="stTabs"] button[aria-selected="true"] {{
+    background: linear-gradient(135deg, {primary}, {primary_hover}) !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    box-shadow: 0px 8px 22px rgba(79,70,229,0.25) !important;
+}}
+
+.stAlert {{
+    background: {card} !important;
+    color: {text} !important;
+    border-radius: 18px !important;
+    border: 1px solid {border} !important;
+}}
+
+.stAlert * {{
+    color: {text} !important;
+}}
+
+div[data-testid="stDataFrame"] {{
+    border-radius: 18px !important;
+    background: {card} !important;
+    border: 1px solid {border} !important;
+    overflow: hidden;
+}}
+
+hr {{
+    border-color: {border} !important;
+}}
+
+[data-testid="stRadio"] label {{
+    background: {card} !important;
+    border: 1px solid {border} !important;
+    border-radius: 999px !important;
+    padding: 0.35rem 0.75rem !important;
+    margin: 0.15rem !important;
+}}
+
+[data-testid="stCaptionContainer"] {{
+    color: {muted} !important;
+}}
+
+</style>
+""", unsafe_allow_html=True)
+
+# ===============================
+# SETTINGS
+# ===============================
 
 DATA_PATH = "df_features.csv"
 DB_PATH = "users.db"
@@ -34,6 +271,10 @@ FEATURES = ["total_spent", "avg_spent", "transaction_count", "recency"]
 EMAIL_SENDER = "naveinrajanderan@gmail.com"
 EMAIL_APP_PASSWORD = "vneaqmrdocfmiczn"
 
+
+# ===============================
+# SECURITY FUNCTIONS
+# ===============================
 
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
@@ -85,6 +326,7 @@ This code is required to complete your registration.
 Regards,
 Customer Financial Behaviour Analytics System
 """
+
         msg = MIMEText(body)
         msg["Subject"] = "OTP Verification"
         msg["From"] = EMAIL_SENDER
@@ -94,12 +336,17 @@ Customer Financial Behaviour Analytics System
         server.login(EMAIL_SENDER, EMAIL_APP_PASSWORD)
         server.send_message(msg)
         server.quit()
+
         return True
 
     except Exception as e:
         st.error(f"Email sending failed: {e}")
         return False
 
+
+# ===============================
+# DATABASE FUNCTIONS
+# ===============================
 
 def init_db():
     conn = sqlite3.connect(DB_PATH)
@@ -128,12 +375,21 @@ def init_db():
     """)
 
     c.execute("SELECT username FROM users WHERE username = ?", ("admin",))
+
     if not c.fetchone():
         c.execute("""
             INSERT INTO users
             (username, email, password, role, status, failed_attempts, locked)
             VALUES (?, ?, ?, ?, ?, ?, ?)
-        """, ("admin", "admin@example.com", hash_password("admin123"), "Admin", "Approved", 0, 0))
+        """, (
+            "admin",
+            "admin@example.com",
+            hash_password("admin123"),
+            "Admin",
+            "Approved",
+            0,
+            0
+        ))
 
     conn.commit()
     conn.close()
@@ -148,11 +404,22 @@ def register_user(username, email, password):
             INSERT INTO users
             (username, email, password, role, status, failed_attempts, locked)
             VALUES (?, ?, ?, ?, ?, ?, ?)
-        """, (username, email, hash_password(password), "User", "Pending", 0, 0))
+        """, (
+            username,
+            email,
+            hash_password(password),
+            "User",
+            "Pending",
+            0,
+            0
+        ))
+
         conn.commit()
         return True
+
     except sqlite3.IntegrityError:
         return False
+
     finally:
         conn.close()
 
@@ -163,7 +430,8 @@ def login_user(username, password):
 
     c.execute("""
         SELECT username, email, password, role, status, failed_attempts, locked
-        FROM users WHERE username = ?
+        FROM users
+        WHERE username = ?
     """, (username,))
 
     user = c.fetchone()
@@ -177,7 +445,10 @@ def login_user(username, password):
         return None, "Account locked after too many failed login attempts."
 
     if user[2] == hash_password(password):
-        c.execute("UPDATE users SET failed_attempts = 0 WHERE username = ?", (username,))
+        c.execute(
+            "UPDATE users SET failed_attempts = 0 WHERE username = ?",
+            (username,)
+        )
         conn.commit()
         conn.close()
 
@@ -192,12 +463,14 @@ def login_user(username, password):
     locked = 1 if new_attempts >= 5 else 0
 
     c.execute("""
-        UPDATE users SET failed_attempts = ?, locked = ?
+        UPDATE users
+        SET failed_attempts = ?, locked = ?
         WHERE username = ?
     """, (new_attempts, locked, username))
 
     conn.commit()
     conn.close()
+
     return None, "Invalid password."
 
 
@@ -214,7 +487,12 @@ def get_all_users():
 def update_user_status(username, status):
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-    c.execute("UPDATE users SET status = ? WHERE username = ?", (status, username))
+
+    c.execute(
+        "UPDATE users SET status = ? WHERE username = ?",
+        (status, username)
+    )
+
     conn.commit()
     conn.close()
 
@@ -222,7 +500,12 @@ def update_user_status(username, status):
 def unlock_user(username):
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-    c.execute("UPDATE users SET locked = 0, failed_attempts = 0 WHERE username = ?", (username,))
+
+    c.execute(
+        "UPDATE users SET locked = 0, failed_attempts = 0 WHERE username = ?",
+        (username,)
+    )
+
     conn.commit()
     conn.close()
 
@@ -230,7 +513,12 @@ def unlock_user(username):
 def delete_user(username):
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-    c.execute("DELETE FROM users WHERE username = ?", (username,))
+
+    c.execute(
+        "DELETE FROM users WHERE username = ?",
+        (username,)
+    )
+
     conn.commit()
     conn.close()
 
@@ -238,10 +526,18 @@ def delete_user(username):
 def add_audit_log(admin_username, action, target_user):
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
+
     c.execute("""
-        INSERT INTO audit_logs (admin_username, action, target_user, timestamp)
+        INSERT INTO audit_logs
+        (admin_username, action, target_user, timestamp)
         VALUES (?, ?, ?, ?)
-    """, (admin_username, action, target_user, datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+    """, (
+        admin_username,
+        action,
+        target_user,
+        datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    ))
+
     conn.commit()
     conn.close()
 
@@ -250,11 +546,16 @@ def get_audit_logs():
     conn = sqlite3.connect(DB_PATH)
     df = pd.read_sql_query("""
         SELECT admin_username, action, target_user, timestamp
-        FROM audit_logs ORDER BY id DESC
+        FROM audit_logs
+        ORDER BY id DESC
     """, conn)
     conn.close()
     return df
 
+
+# ===============================
+# DATA + ANALYTICS
+# ===============================
 
 @st.cache_data
 def load_data():
@@ -280,18 +581,30 @@ def run_analytics(df):
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
 
-    kmeans = KMeans(n_clusters=4, random_state=42, n_init=10)
+    kmeans = KMeans(
+        n_clusters=4,
+        random_state=42,
+        n_init=10
+    )
+
     df["kmeans_cluster"] = kmeans.fit_predict(X_scaled)
 
     try:
-        silhouette = silhouette_score(X_scaled, df["kmeans_cluster"])
+        silhouette = silhouette_score(
+            X_scaled,
+            df["kmeans_cluster"]
+        )
     except Exception:
         silhouette = 0
 
     correlation_matrix = df[FEATURES].corr()
 
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42, stratify=y
+        X,
+        y,
+        test_size=0.2,
+        random_state=42,
+        stratify=y
     )
 
     models = {
@@ -299,8 +612,15 @@ def run_analytics(df):
             ("scaler", StandardScaler()),
             ("model", LogisticRegression(max_iter=1000))
         ]),
-        "Decision Tree": DecisionTreeClassifier(random_state=42, max_depth=5),
-        "Random Forest": RandomForestClassifier(random_state=42, n_estimators=100, max_depth=8)
+        "Decision Tree": DecisionTreeClassifier(
+            random_state=42,
+            max_depth=5
+        ),
+        "Random Forest": RandomForestClassifier(
+            random_state=42,
+            n_estimators=100,
+            max_depth=8
+        )
     }
 
     results = []
@@ -321,6 +641,7 @@ def run_analytics(df):
         }
 
     rf_model = trained_models["Random Forest"]["model"]
+
     feature_importance = pd.DataFrame({
         "Feature": FEATURES,
         "Importance": rf_model.feature_importances_
@@ -353,15 +674,31 @@ def run_analytics(df):
         ]
     })
 
-    return df, pd.DataFrame(results), trained_models, correlation_matrix, feature_importance, silhouette, analytics_summary
+    return (
+        df,
+        pd.DataFrame(results),
+        trained_models,
+        correlation_matrix,
+        feature_importance,
+        silhouette,
+        analytics_summary
+    )
 
+
+# ===============================
+# BUSINESS LOGIC
+# ===============================
 
 def calculate_customer_score(total_spent, avg_spent, transaction_count, recency, df):
     spend_score = min((total_spent / df["total_spent"].max()) * 40, 40)
     avg_score = min((avg_spent / df["avg_spent"].max()) * 20, 20)
     frequency_score = min((transaction_count / df["transaction_count"].max()) * 30, 30)
     recency_score = max(10 - ((recency / df["recency"].max()) * 10), 0)
-    return round(spend_score + avg_score + frequency_score + recency_score, 2)
+
+    return round(
+        spend_score + avg_score + frequency_score + recency_score,
+        2
+    )
 
 
 def score_level(score):
@@ -389,19 +726,26 @@ def cluster_persona(cluster):
         2: "High Value Customer",
         3: "Inactive or Low Engagement Customer"
     }
-    return personas.get(int(cluster), "General Customer Segment")
+
+    return personas.get(
+        int(cluster),
+        "General Customer Segment"
+    )
 
 
 def abnormal_spending_status(total_spent, df):
     threshold = df["total_spent"].quantile(0.95)
+
     if total_spent > threshold:
         return "Flagged"
+
     return "Normal"
 
 
 def build_prediction_result(input_data, best_model, df):
     prediction = best_model.predict(input_data)[0]
     probability = best_model.predict_proba(input_data)[0]
+
     row = input_data.iloc[0]
 
     score = calculate_customer_score(
@@ -415,25 +759,43 @@ def build_prediction_result(input_data, best_model, df):
     return prediction, probability, score
 
 
+# ===============================
+# APP START
+# ===============================
+
 init_db()
 
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
+
 if "username" not in st.session_state:
     st.session_state.username = ""
+
 if "role" not in st.session_state:
     st.session_state.role = ""
+
 if "pending_otp" not in st.session_state:
     st.session_state.pending_otp = ""
+
 if "pending_registration" not in st.session_state:
     st.session_state.pending_registration = {}
+
+
+# ===============================
+# LOGIN / REGISTER
+# ===============================
 
 st.sidebar.title("Customer Analytics System")
 
 if not st.session_state.logged_in:
-    menu = st.sidebar.selectbox("Menu", ["Login", "Register"])
+
+    menu = st.sidebar.selectbox(
+        "Menu",
+        ["Login", "Register"]
+    )
 
     if menu == "Register":
+
         st.title("User Registration with Email OTP")
 
         new_user = st.text_input("Create Username")
@@ -441,17 +803,22 @@ if not st.session_state.logged_in:
         new_password = st.text_input("Create Password", type="password")
 
         if st.button("Send OTP"):
+
             username_valid, username_msg = validate_username(new_user)
             password_valid, password_msg = validate_password(new_password)
 
             if not username_valid:
                 st.warning(username_msg)
+
             elif not validate_email(new_email):
                 st.warning("Please enter a valid email address.")
+
             elif not password_valid:
                 st.warning(password_msg)
+
             else:
                 otp = generate_otp()
+
                 st.session_state.pending_otp = otp
                 st.session_state.pending_registration = {
                     "username": new_user,
@@ -465,43 +832,74 @@ if not st.session_state.logged_in:
         entered_otp = st.text_input("Enter OTP")
 
         if st.button("Verify OTP and Register"):
+
             if entered_otp == st.session_state.pending_otp and entered_otp != "":
+
                 reg = st.session_state.pending_registration
-                success = register_user(reg["username"], reg["email"], reg["password"])
+
+                success = register_user(
+                    reg["username"],
+                    reg["email"],
+                    reg["password"]
+                )
 
                 if success:
                     st.success("Registration submitted successfully.")
                     st.info("Waiting for admin approval.")
+
                     st.session_state.pending_otp = ""
                     st.session_state.pending_registration = {}
+
                 else:
                     st.error("Username already exists.")
+
             else:
                 st.error("Invalid OTP.")
 
     elif menu == "Login":
+
         st.title("Login System")
 
         username = st.text_input("Username")
         password = st.text_input("Password", type="password")
 
         if st.button("Login"):
+
             user, msg = login_user(username, password)
 
             if user:
+
                 if user["status"] != "Approved":
                     st.warning("Your account is waiting for admin approval.")
+
                 else:
                     st.session_state.logged_in = True
                     st.session_state.username = user["username"]
                     st.session_state.role = user["role"]
                     st.rerun()
+
             else:
                 st.error(msg)
 
+
+# ===============================
+# MAIN APP
+# ===============================
+
 else:
+
     df = load_data()
-    df, model_results, trained_models, correlation_matrix, feature_importance, silhouette, analytics_summary = run_analytics(df)
+
+    (
+        df,
+        model_results,
+        trained_models,
+        correlation_matrix,
+        feature_importance,
+        silhouette,
+        analytics_summary
+    ) = run_analytics(df)
+
     best_model = trained_models["Random Forest"]["model"]
 
     st.sidebar.success(f"Logged in as: {st.session_state.username}")
@@ -543,72 +941,121 @@ else:
     tabs = st.tabs(tab_names)
     tab_dict = dict(zip(tab_names, tabs))
 
+
+    # ===============================
+    # ADMIN DASHBOARD
+    # ===============================
+
     if "Admin Dashboard" in tab_dict:
+
         with tab_dict["Admin Dashboard"]:
+
             st.title("Executive Admin Dashboard")
 
             users_df = get_all_users()
 
             col1, col2, col3, col4 = st.columns(4)
+
             col1.metric("Total Users", len(users_df))
             col2.metric("Approved Users", len(users_df[users_df["status"] == "Approved"]))
             col3.metric("Pending Users", len(users_df[users_df["status"] == "Pending"]))
             col4.metric("Locked Accounts", len(users_df[users_df["locked"] == 1]))
 
             col1, col2, col3, col4 = st.columns(4)
+
             col1.metric("Total Customers", len(df))
-            col2.metric("Total Revenue", round(df["total_spent"].sum(), 2))
+            col2.metric("Total Revenue", f"RM {round(df['total_spent'].sum(), 2):,.2f}")
             col3.metric("Customer Clusters", df["kmeans_cluster"].nunique())
-            col4.metric("Best Accuracy", model_results["Accuracy"].max())
+            col4.metric("Best Accuracy", f"{model_results['Accuracy'].max() * 100:.2f}%")
+
+
+    # ===============================
+    # USER MANAGEMENT
+    # ===============================
 
     if "User Management" in tab_dict:
+
         with tab_dict["User Management"]:
+
             st.title("User Management")
 
             users_df = get_all_users()
             st.dataframe(users_df, use_container_width=True)
 
-            non_admin_users = users_df[users_df["username"] != "admin"]["username"].tolist()
+            non_admin_users = users_df[
+                users_df["username"] != "admin"
+            ]["username"].tolist()
 
             if non_admin_users:
+
                 selected_user = st.selectbox("Select User", non_admin_users)
                 action = st.radio("Action", ["Approve", "Reject", "Unlock", "Delete"])
 
-                if st.button("Apply Action"):
+                apply_action = st.button(
+                    "🚀 Apply Action",
+                    type="primary"
+                )
+
+                if apply_action:
+
                     if action == "Approve":
                         update_user_status(selected_user, "Approved")
                         add_audit_log(st.session_state.username, "Approved user", selected_user)
+
                     elif action == "Reject":
                         update_user_status(selected_user, "Rejected")
                         add_audit_log(st.session_state.username, "Rejected user", selected_user)
+
                     elif action == "Unlock":
                         unlock_user(selected_user)
                         add_audit_log(st.session_state.username, "Unlocked user", selected_user)
+
                     elif action == "Delete":
                         delete_user(selected_user)
                         add_audit_log(st.session_state.username, "Deleted user", selected_user)
 
                     st.success("Action completed.")
                     st.rerun()
+
             else:
                 st.info("No user accounts available.")
 
+
+    # ===============================
+    # AUDIT LOGS
+    # ===============================
+
     if "Audit Logs" in tab_dict:
+
         with tab_dict["Audit Logs"]:
+
             st.title("Security Audit Logs")
 
             logs_df = get_audit_logs()
             st.dataframe(logs_df, use_container_width=True)
 
             if not logs_df.empty:
-                fig = px.histogram(logs_df, x="action", title="Admin Activity Distribution")
+                fig = px.histogram(
+                    logs_df,
+                    x="action",
+                    title="Admin Activity Distribution"
+                )
+
                 st.plotly_chart(fig, use_container_width=True)
 
+
+    # ===============================
+    # DATA QUALITY
+    # ===============================
+
     if "Data Quality" in tab_dict:
+
         with tab_dict["Data Quality"]:
+
             st.title("Data Quality Dashboard")
 
             col1, col2, col3, col4 = st.columns(4)
+
             col1.metric("Total Rows", len(df))
             col2.metric("Total Columns", len(df.columns))
             col3.metric("Missing Values", int(df.isnull().sum().sum()))
@@ -616,12 +1063,20 @@ else:
 
             missing_df = df.isnull().sum().reset_index()
             missing_df.columns = ["Column", "Missing Values"]
+
             st.dataframe(missing_df, use_container_width=True)
 
+
+    # ===============================
+    # ANALYTICS TECHNIQUES
+    # ===============================
+
     with tab_dict["Analytics Techniques"]:
+
         st.title("Six Analytical Techniques Implemented")
 
         st.dataframe(analytics_summary, use_container_width=True)
+
         st.metric("K-Means Silhouette Score", round(silhouette, 4))
 
         st.info("""
@@ -645,22 +1100,56 @@ Logistic Regression, Decision Tree, and Random Forest are used for customer clas
 Only the three classification models are shown in the Model Comparison tab because they produce accuracy scores and confusion matrices.
 """)
 
+
+    # ===============================
+    # DASHBOARD
+    # ===============================
+
     with tab_dict["Dashboard"]:
-        st.title("Customer Financial Behaviour Analytics System")
+
+        st.title("📊 Customer Financial Behaviour Analytics System")
+
+        st.caption(
+            "Customer Segmentation | Behaviour Analysis | Machine Learning | Business Intelligence"
+        )
+
+        st.info("""
+📌 Insights Generated
+
+• Customer Segmentation using K-Means  
+• Feature Importance Analysis using Random Forest  
+• Customer Value Classification  
+• Abnormal Spending Detection  
+• Bulk Customer Prediction
+""")
 
         col1, col2, col3, col4 = st.columns(4)
+
         col1.metric("Total Customers", len(df))
-        col2.metric("Total Revenue", round(df["total_spent"].sum(), 2))
-        col3.metric("Average Spending", round(df["avg_spent"].mean(), 2))
+        col2.metric("Total Revenue", f"RM {round(df['total_spent'].sum(), 2):,.2f}")
+        col3.metric("Average Spending", f"RM {round(df['avg_spent'].mean(), 2):,.2f}")
         col4.metric("Customer Clusters", df["kmeans_cluster"].nunique())
 
         st.subheader("Dataset Preview")
+
         st.dataframe(df.head(20), use_container_width=True)
 
         csv = df.to_csv(index=False).encode("utf-8")
-        st.download_button("Download Processed Dataset", csv, "processed_customer_features.csv", "text/csv")
+
+        st.download_button(
+            "Download Processed Dataset",
+            csv,
+            "processed_customer_features.csv",
+            "text/csv"
+        )
+
+
+    # ===============================
+    # SEGMENTATION
+    # ===============================
 
     with tab_dict["Segmentation"]:
+
         st.title("Customer Segmentation")
 
         cluster_counts = df["kmeans_cluster"].value_counts().reset_index()
@@ -673,6 +1162,7 @@ Only the three classification models are shown in the Model Comparison tab becau
             color="Cluster",
             title="Customer Distribution by K-Means Cluster"
         )
+
         st.plotly_chart(fig, use_container_width=True)
 
         fig = px.scatter(
@@ -683,6 +1173,7 @@ Only the three classification models are shown in the Model Comparison tab becau
             hover_data=["avg_spent", "recency"],
             title="Customer Segmentation Scatter Plot"
         )
+
         st.plotly_chart(fig, use_container_width=True)
 
         summary = df.groupby("kmeans_cluster")[FEATURES].mean().round(2).reset_index()
@@ -692,6 +1183,7 @@ Only the three classification models are shown in the Model Comparison tab becau
         st.dataframe(summary, use_container_width=True)
 
         st.subheader("Business Insights")
+
         for _, row in summary.iterrows():
             st.write(
                 f"Cluster {row['kmeans_cluster']} - {row['Persona']}: "
@@ -707,14 +1199,27 @@ Only the three classification models are shown in the Model Comparison tab becau
             color="kmeans_cluster",
             title="Spending Distribution by Cluster"
         )
+
         st.plotly_chart(fig, use_container_width=True)
 
+
+    # ===============================
+    # BEHAVIOUR
+    # ===============================
+
     with tab_dict["Behaviour"]:
+
         st.title("Customer Behaviour Analysis")
 
         feature = st.selectbox("Select Feature", FEATURES)
 
-        fig = px.histogram(df, x=feature, nbins=50, title=f"Distribution of {feature}")
+        fig = px.histogram(
+            df,
+            x=feature,
+            nbins=50,
+            title=f"Distribution of {feature}"
+        )
+
         st.plotly_chart(fig, use_container_width=True)
 
         st.dataframe(df[FEATURES].describe().round(2), use_container_width=True)
@@ -725,9 +1230,16 @@ Only the three classification models are shown in the Model Comparison tab becau
             color="kmeans_cluster",
             title="Feature Relationship Matrix"
         )
+
         st.plotly_chart(fig, use_container_width=True)
 
+
+    # ===============================
+    # CORRELATION
+    # ===============================
+
     with tab_dict["Correlation"]:
+
         st.title("Correlation Analysis")
 
         fig = px.imshow(
@@ -736,12 +1248,17 @@ Only the three classification models are shown in the Model Comparison tab becau
             title="Pearson Correlation Heatmap",
             color_continuous_scale="RdBu"
         )
+
         st.plotly_chart(fig, use_container_width=True)
 
         pairs = correlation_matrix.abs().unstack().reset_index()
         pairs.columns = ["Feature 1", "Feature 2", "Correlation"]
         pairs = pairs[pairs["Feature 1"] != pairs["Feature 2"]]
-        strongest = pairs.sort_values(by="Correlation", ascending=False).iloc[0]
+
+        strongest = pairs.sort_values(
+            by="Correlation",
+            ascending=False
+        ).iloc[0]
 
         st.info(
             f"Strongest relationship: {strongest['Feature 1']} and "
@@ -749,18 +1266,29 @@ Only the three classification models are shown in the Model Comparison tab becau
         )
 
         st.subheader("Interpretation")
+
         st.write(
             "The correlation analysis helps identify relationships between customer "
             "behaviour variables such as total spending, average spending, transaction "
             "frequency, and recency."
         )
 
+
+    # ===============================
+    # MODELS
+    # ===============================
+
     with tab_dict["Models"]:
+
         st.title("Machine Learning Model Comparison")
 
         st.dataframe(model_results, use_container_width=True)
 
-        best_model_name = model_results.sort_values(by="Accuracy", ascending=False).iloc[0]["Model"]
+        best_model_name = model_results.sort_values(
+            by="Accuracy",
+            ascending=False
+        ).iloc[0]["Model"]
+
         st.success(f"Best Performing Model: {best_model_name}")
 
         fig = px.bar(
@@ -770,9 +1298,14 @@ Only the three classification models are shown in the Model Comparison tab becau
             color="Model",
             title="Model Accuracy Comparison"
         )
+
         st.plotly_chart(fig, use_container_width=True)
 
-        selected_model = st.selectbox("Select Model", list(trained_models.keys()))
+        selected_model = st.selectbox(
+            "Select Model",
+            list(trained_models.keys())
+        )
+
         cm = trained_models[selected_model]["confusion_matrix"]
 
         cm_df = pd.DataFrame(
@@ -787,9 +1320,16 @@ Only the three classification models are shown in the Model Comparison tab becau
             title=f"Confusion Matrix - {selected_model}",
             color_continuous_scale="Blues"
         )
+
         st.plotly_chart(fig, use_container_width=True)
 
+
+    # ===============================
+    # FEATURE IMPORTANCE
+    # ===============================
+
     with tab_dict["Feature Importance"]:
+
         st.title("Feature Importance Analysis")
 
         fig = px.bar(
@@ -799,17 +1339,25 @@ Only the three classification models are shown in the Model Comparison tab becau
             color="Feature",
             title="Random Forest Feature Importance"
         )
+
         st.plotly_chart(fig, use_container_width=True)
 
         st.dataframe(feature_importance.round(4), use_container_width=True)
 
         top_feature = feature_importance.iloc[0]
+
         st.success(
             f"Most Important Feature: {top_feature['Feature']} "
             f"({round(top_feature['Importance'], 4)})"
         )
 
+
+    # ===============================
+    # PREDICTION
+    # ===============================
+
     with tab_dict["Prediction"]:
+
         st.title("Customer Value Prediction System")
 
         st.subheader("Single Customer Prediction")
@@ -817,14 +1365,33 @@ Only the three classification models are shown in the Model Comparison tab becau
         col1, col2 = st.columns(2)
 
         with col1:
-            total_spent = st.number_input("Total Spending", min_value=0.0, value=1000.0)
-            avg_spent = st.number_input("Average Spending", min_value=0.0, value=50.0)
+            total_spent = st.number_input(
+                "Total Spending",
+                min_value=0.0,
+                value=1000.0
+            )
+
+            avg_spent = st.number_input(
+                "Average Spending",
+                min_value=0.0,
+                value=50.0
+            )
 
         with col2:
-            transaction_count = st.number_input("Transaction Count", min_value=0, value=20)
-            recency = st.number_input("Recency in Days", min_value=0, value=30)
+            transaction_count = st.number_input(
+                "Transaction Count",
+                min_value=0,
+                value=20
+            )
+
+            recency = st.number_input(
+                "Recency in Days",
+                min_value=0,
+                value=30
+            )
 
         if st.button("Predict Single Customer"):
+
             input_data = pd.DataFrame([{
                 "total_spent": total_spent,
                 "avg_spent": avg_spent,
@@ -832,7 +1399,11 @@ Only the three classification models are shown in the Model Comparison tab becau
                 "recency": recency
             }])
 
-            prediction, probability, score = build_prediction_result(input_data, best_model, df)
+            prediction, probability, score = build_prediction_result(
+                input_data,
+                best_model,
+                df
+            )
 
             if prediction == 1:
                 st.success("Prediction: High Value Customer")
@@ -840,19 +1411,23 @@ Only the three classification models are shown in the Model Comparison tab becau
                 st.warning("Prediction: Low Value Customer")
 
             col1, col2, col3 = st.columns(3)
+
             col1.metric("Customer Score", f"{score}/100")
             col2.metric("Score Level", score_level(score))
             col3.metric("High Value Probability", round(probability[1], 3))
 
             st.subheader("Business Recommendation")
+
             st.info(recommendation(score, prediction))
 
             st.subheader("Abnormal Spending Detection")
+
             threshold = df["total_spent"].quantile(0.95)
 
             st.write(
                 f"The system flags abnormal spending when total spending is higher than "
-                f"the 95th percentile threshold of the dataset. Current threshold: {round(threshold, 2)}"
+                f"the 95th percentile threshold of the dataset. Current threshold: "
+                f"{round(threshold, 2)}"
             )
 
             if abnormal_spending_status(total_spent, df) == "Flagged":
@@ -861,6 +1436,7 @@ Only the three classification models are shown in the Model Comparison tab becau
                 st.success("No major abnormal spending indicator detected.")
 
             st.subheader("Input Summary")
+
             st.dataframe(input_data, use_container_width=True)
 
             report_df = pd.DataFrame({
@@ -906,11 +1482,18 @@ Only the three classification models are shown in the Model Comparison tab becau
         )
 
         if uploaded_file is not None:
+
             bulk_df = pd.read_csv(uploaded_file)
 
-            required_columns = ["total_spent", "avg_spent", "transaction_count", "recency"]
+            required_columns = [
+                "total_spent",
+                "avg_spent",
+                "transaction_count",
+                "recency"
+            ]
 
             if all(col in bulk_df.columns for col in required_columns):
+
                 predictions = best_model.predict(bulk_df[required_columns])
                 probabilities = best_model.predict_proba(bulk_df[required_columns])
 
@@ -947,6 +1530,7 @@ Only the three classification models are shown in the Model Comparison tab becau
                 ]
 
                 st.success("Bulk prediction completed successfully.")
+
                 st.dataframe(bulk_df, use_container_width=True)
 
                 bulk_csv = bulk_df.to_csv(index=False).encode("utf-8")
